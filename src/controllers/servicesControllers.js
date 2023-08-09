@@ -17,3 +17,36 @@ export async function addService (req, res){
         return res.status(500).send(err.message)
     }
 }
+
+export async function getServices (req, res){
+    try{
+        const availableServices = (await db.query(`SELECT services.id AS "serviceId", services.name AS "serviceName", services.description, services.price, services.visits, services."userId", users.name AS "userName", users.lastname AS "userLastname", users."phoneNumber", users."email", users."cep"
+            FROM services
+            JOIN users
+            ON services."userId" = users.id
+            WHERE services."available" = true
+            ORDER BY services."visits" DESC`)).rows;
+        return res.status(200).send(availableServices);
+    }catch(err){
+        return res.status(500).send(err.message)
+    }
+}
+
+export async function getUserServices (req, res){
+    //headers: {Authorization: "Bearer TOKEN"}
+    //res.locals.user: {userId}
+    const {user} = res.locals
+    try{
+        const userServices = (await db.query(`SELECT services.id AS "serviceId", services.name AS "serviceName", services.description, services.price, services.visits, services."userId", users.name AS "userName", users.lastname AS "userLastname", users."phoneNumber", users."email", users."cep"
+            FROM services
+            JOIN users
+            ON services."userId" = users.id
+            WHERE services."userId" = $1
+            ORDER BY services."createdAt" DESC`, 
+            [user.userId]))
+            .rows;
+        return res.status(200).send(userServices);
+    }catch(err){
+        return res.status(500).send(err.message)
+    }
+}
