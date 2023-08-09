@@ -50,3 +50,18 @@ export async function getUserServices (req, res){
         return res.status(500).send(err.message)
     }
 }
+
+export async function changeServiceAvailability (req, res){
+    //headers: {Authorization: "Bearer TOKEN"}
+    //params: {id} serviceId
+    //res.locals.user: {userId}
+    //res.locals.service: {userId, available}
+    const {service} = res.locals;
+    //const availability = {available: !service.available}
+    try{
+        await db.query(`UPDATE services SET "available" = $1 WHERE id = $2`, [!service.available, service.userId])
+        return res.status(200).send('Serviço atualizado com sucesso!')
+    }catch(err){
+        return res.status(500).send(err.message)
+    }
+}
