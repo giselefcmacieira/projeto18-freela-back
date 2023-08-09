@@ -11,7 +11,6 @@ export default async function validateEmailSignIn (req, res, next){
         }
         res.locals.user = user.rows[0] //{email, password}
         next()
-        //return res.send(user)
     }catch(err){
         return res.status(500).send(err.message)
     }
