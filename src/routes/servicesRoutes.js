@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addService, changeServiceAvailability, changeServiceVisits, getServices, getUserServices } from "../controllers/servicesControllers.js";
+import { addService, changeServiceAvailability, changeServiceVisits, deleteService, getServices, getUserServices } from "../controllers/servicesControllers.js";
 import validateSchema from "../middlewares/validateSchema.js";
 import validateService from "../middlewares/validateService.js";
 import validateServiceVisits from "../middlewares/validateServiceVisits.js";
@@ -17,5 +17,7 @@ servicesRouter.get('/service/me', validateToken, getUserServices);
 servicesRouter.put('/service/availability/:id', validateToken, validateService, changeServiceAvailability);
 
 servicesRouter.put('/service/visits/:id', validateServiceVisits, changeServiceVisits);
+
+servicesRouter.delete('/service/:id', validateToken, validateService, deleteService)
 
 export default servicesRouter

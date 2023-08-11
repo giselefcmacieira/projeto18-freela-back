@@ -79,3 +79,16 @@ export async function changeServiceVisits (req, res){
         return res.status(500).send(err.messsage)
     }
 }
+
+export async function deleteService (req, res){
+    //params: {id} serviceId
+    //res.locals.user: {userId}
+    //res.locals.service: {userId, available}
+    const {id} = req.params
+    try{
+        await db.query(`DELETE FROM services WHERE id = $1`, [id])
+        return res.status(200).send('Serviço excluído com sucesso!')
+    }catch(err){
+        return res.status(500).send(err.message)
+    }
+}
