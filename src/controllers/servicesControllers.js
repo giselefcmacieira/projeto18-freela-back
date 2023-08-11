@@ -7,7 +7,6 @@ export async function addService (req, res){
     //res.locals.user: {userId}
     const {name, description, image, price} = req.body;
     const {user} = res.locals;
-    console.log(user.userId)
     try{
         await db.query(`INSERT INTO services ("userId", "name", "description", "image", "price", "visits", "available")
             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
