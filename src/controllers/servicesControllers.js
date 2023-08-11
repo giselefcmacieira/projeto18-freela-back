@@ -20,7 +20,7 @@ export async function addService (req, res){
 
 export async function getServices (req, res){
     try{
-        const availableServices = (await db.query(`SELECT services.id AS "serviceId", services.name AS "serviceName", services.description, services.price, services.visits, services."userId", users.name AS "userName", users.lastname AS "userLastname", users."phoneNumber", users."email", users."cep"
+        const availableServices = (await db.query(`SELECT services.id AS "serviceId", services.name AS "serviceName", services.image, services.description, services.price, services.visits, services."userId", users.name AS "userName", users.lastname AS "userLastname", users."phoneNumber", users."email", users."cep", users."city", users."logradouro", users."uf", users."bairro"
             FROM services
             JOIN users
             ON services."userId" = users.id
@@ -63,5 +63,19 @@ export async function changeServiceAvailability (req, res){
         return res.status(200).send('Serviço atualizado com sucesso!')
     }catch(err){
         return res.status(500).send(err.message)
+    }
+}
+
+export async function changeServiceVisits (req, res){
+    //params: {id} serviceId
+    //res.locals.service: {visits}
+    const {id} = req.params;
+    const {service} = res.locals
+    const numVisits = service.visits + 1;
+    try{
+        await db.query(`UPDATE services SET "visits" = $1 WHERE id = $2`, [numVisits, id])
+        return res.status(200).send('Serviço vizualizado com sucesso!')
+    }catch(err){
+        return res.status(500).send(err.messsage)
     }
 }
