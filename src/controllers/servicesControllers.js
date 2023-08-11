@@ -37,7 +37,7 @@ export async function getUserServices (req, res){
     //res.locals.user: {userId}
     const {user} = res.locals
     try{
-        const userServices = (await db.query(`SELECT services.id AS "serviceId", services.name AS "serviceName", services.description, services.price, services.visits, services."userId", users.name AS "userName", users.lastname AS "userLastname", users."phoneNumber", users."email", users."cep"
+        const userServices = (await db.query(`SELECT services.id AS "serviceId", services.name AS "serviceName", services."available", services.image, services.description, services.price, services.visits, services."userId", users.name AS "userName", users.lastname AS "userLastname", users."phoneNumber", users."email", users."cep"
             FROM services
             JOIN users
             ON services."userId" = users.id
@@ -57,9 +57,10 @@ export async function changeServiceAvailability (req, res){
     //res.locals.user: {userId}
     //res.locals.service: {userId, available}
     const {service} = res.locals;
+    const {id} = req.params
     //const availability = {available: !service.available}
     try{
-        await db.query(`UPDATE services SET "available" = $1 WHERE id = $2`, [!service.available, service.userId])
+        await db.query(`UPDATE services SET "available" = $1 WHERE id = $2`, [!service.available, id])
         return res.status(200).send('Serviço atualizado com sucesso!')
     }catch(err){
         return res.status(500).send(err.message)

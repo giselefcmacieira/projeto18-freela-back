@@ -6,7 +6,7 @@ export default async function validateToken (req, res, next){
     const {authorization} = req.headers;
     const token = authorization?.replace("Bearer ", "");
     if(!token){
-        return res.status(401).send('Não autorizado!')
+        return res.status(401).send(`Não autorizado!`)
     }
     try{
         const user = await db.query(`SELECT "userId" FROM sessions WHERE token = $1`, [token]);
